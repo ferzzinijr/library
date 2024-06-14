@@ -40,4 +40,7 @@ public class ServiceLocator {
     public BookSubscriber getBookSubscriber() {return getBookDao();}
     public BookController getBookController() {return new BookControllerImpl(getBookDatabase());}
     public BookView getBookView() {return new BookViewImpl(getBookSubscriber(), getBookController());}
+
+    public UserControlController getUserControlController() {return new UserControlControllerImpl(getUserDatabase());}
+    public UserControlView getUserControlView() {return new UserControlViewImpl(getUserSubscriber(), getUserControlController());}
 }

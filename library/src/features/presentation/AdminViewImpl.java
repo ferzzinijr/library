@@ -28,6 +28,11 @@ public class AdminViewImpl extends JFrame {
         userButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        ServiceLocator.getInstance().getUserControlView().open();
+                    }
+                });
             }
         });
 
