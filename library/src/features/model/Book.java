@@ -1,15 +1,12 @@
 package features.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "books")
 public class Book {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String author;
     private String name;
@@ -18,8 +15,7 @@ public class Book {
 
     public Book() {}
 
-    public Book(int id, String author, String name, boolean isAvailable, int reservedDays) {
-        this.id = id;
+    public Book(String author, String name, boolean isAvailable, int reservedDays) {
         this.author = author;
         this.name = name;
         this.is_available = isAvailable;
@@ -30,10 +26,12 @@ public class Book {
     public String getAuthor() {return this.author;}
     public String getName() {return this.name;}
     public int getReservedDays() {return this.reserved_days;}
+    public void setAuthor(String author) {this.author = author;}
+    public void setName(String name) {this.name = name;}
 
     public boolean isAvailable() {return this.is_available;}
 
-    public void setAvailable() {this.is_available = true;}
+    public void setAvailable(boolean isAvailable) {this.is_available = isAvailable;}
 
     public void setReservedDays(int days) {this.reserved_days = days;}
 }

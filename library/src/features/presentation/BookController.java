@@ -5,8 +5,8 @@ import java.util.List;
 
 public interface BookController {
     void setView(BookView view);
-    void addBook(String author, String name, boolean isAvailable);
-    void updateBook(String author, String name, boolean isAvailable);
+    void addBook(String author, String name, boolean isAvailable, int daysToReserve);
+    void updateBook(int bookId, String author, String name, boolean isAvailable, int daysToReserve);
     void deleteBook(int bookId);
     void setAvailable(int bookId);
     List<Book> getBooks();

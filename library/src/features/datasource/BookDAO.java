@@ -21,13 +21,36 @@ public class BookDAO implements BookDatabase, BookSubscriber {
     }
 
     @Override
-    public void insertBook(String author, String name, boolean isAvailable) {
+    public void insertBook(String author, String name, boolean isAvailable, int daysToReserve) {
+        try {
+            DatabaseManager.getSessionFactory().inTransaction(session -> {
+                var book = new Book(author, name, isAvailable, daysToReserve);
+                session.persist(book);
+            });
 
+            notifyDataChanged();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public void updateBook(String author, String name, boolean isAvailable) {
+    public void updateBook(int bookId ,String author, String name, boolean isAvailable, int daysToReserve) {
+        try {
+            DatabaseManager.getSessionFactory().fromTransaction(session -> {
+                var book = session.get(Book.class, bookId);
+                book.setAuthor(author);
+                book.setName(name);
+                book.setAvailable(isAvailable);
+                book.setReservedDays(daysToReserve);
+                session.persist(book);
 
+                notifyDataChanged();
+                return null;
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

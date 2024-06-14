@@ -16,13 +16,13 @@ public class BookControllerImpl implements BookController {
     public void setView(BookView view) {this.bookView = view;}
 
     @Override
-    public void addBook(String author, String name, boolean isAvailable) {
-        bookDatabase.insertBook(author, name, isAvailable);
+    public void addBook(String author, String name, boolean isAvailable, int daysToReserve) {
+        bookDatabase.insertBook(author, name, isAvailable, daysToReserve);
     }
 
     @Override
-    public void updateBook(String author, String name, boolean isAvailable) {
-        bookDatabase.updateBook(author, name, isAvailable);
+    public void updateBook(int bookId, String author, String name, boolean isAvailable, int daysToReserve) {
+        bookDatabase.updateBook(bookId, author, name, isAvailable, daysToReserve);
     }
 
     @Override

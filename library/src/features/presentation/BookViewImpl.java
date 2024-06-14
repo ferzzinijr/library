@@ -40,8 +40,8 @@ public class BookViewImpl extends JFrame implements BookView, BookListener {
         add(scrollPane, BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JButton addButton = new JButton("Add");
-        JButton editButton = new JButton("Edit");
+        JButton addButton = new JButton("Adicionar");
+        JButton editButton = new JButton("Editar");
         JButton deleteButton = new JButton("Delete");
 
         buttonPanel.add(addButton);
@@ -51,21 +51,21 @@ public class BookViewImpl extends JFrame implements BookView, BookListener {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                addBook();
             }
         });
 
         editButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Lógica para editar um livro
+                editBook(bookTable.getSelectedRow());
             }
         });
 
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                deleteTask(bookTable.getSelectedRow());
+                deleteBook(bookTable.getSelectedRow());
             }
         });
 
@@ -73,12 +73,20 @@ public class BookViewImpl extends JFrame implements BookView, BookListener {
     }
 
     private void loadBooks() {
-        table.setRowCount(0);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                table.setRowCount(0);
 
-        List<Book> books = bookController.getBooks();
+                List<Book> books = bookController.getBooks();
 
-        for (Book book : books)
-            table.addRow(new Object[]{book.getId(), book.getAuthor(), book.getName(), book.isAvailable(), book.getReservedDays()});
+                for (Book book : books) {
+                    table.addRow(new Object[]{book.getId(), book.getAuthor(), book.getName(), book.isAvailable(), book.getReservedDays()});
+                }
+
+                table.fireTableDataChanged();
+            }
+        });
     }
 
     @Override
@@ -96,7 +104,42 @@ public class BookViewImpl extends JFrame implements BookView, BookListener {
 
     }
 
-    private void deleteTask(int row) {
+    private void addBook() {
+        String author = JOptionPane.showInputDialog(this, "Autor: ");
+        String name = JOptionPane.showInputDialog(this, "Nome: : ");
+        String[] options = {"Sim", "Não"};
+        int selectedOption = JOptionPane.showOptionDialog(this, "Está disponível?", "Escolha uma opção",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, true);
+        boolean isAvailable = selectedOption == 0;
+
+        String daysToReserve = JOptionPane.showInputDialog(this, "Máximo de dias para reservar: ");
+
+        bookController.addBook(author, name, isAvailable, Integer.parseInt(daysToReserve));
+    }
+
+    private void editBook(int row){
+        int bookId = (int) table.getValueAt(row, 0);
+
+        String currentAuthor = (String) table.getValueAt(row, 1);
+        String currentName = (String) table.getValueAt(row, 2);
+        boolean currentIsAvailable = (Boolean) table.getValueAt(row, 3);
+        int currentDaysToReserve = (int) table.getValueAt(row, 4);
+
+        String newAuthor = JOptionPane.showInputDialog(this, "Autor: ", currentAuthor);
+        String newName = JOptionPane.showInputDialog(this, "Nome: ", currentName);
+
+        String[] options = {"Sim", "Não"};
+        int selectedOption = JOptionPane.showOptionDialog(this, "Está disponível?", "Escolha uma opção",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, currentIsAvailable ? options[0] : options[1]);
+
+        boolean newIsAvailable = selectedOption == 0;
+
+        String newDaysToReserve = JOptionPane.showInputDialog(this, "Máximo de dias para reservar: ", currentDaysToReserve);
+
+        bookController.updateBook(bookId, newAuthor, newName, newIsAvailable, Integer.parseInt(newDaysToReserve));
+    }
+
+    private void deleteBook(int row) {
         int bookId = (int) table.getValueAt(row, 0);
 
         bookController.deleteBook(bookId);
