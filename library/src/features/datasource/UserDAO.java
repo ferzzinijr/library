@@ -1,5 +1,6 @@
 package features.datasource;
 
+import features.model.Book;
 import features.model.User;
 import infrastructure.DatabaseManager;
 import org.hibernate.Session;
@@ -39,5 +40,70 @@ public class UserDAO implements UserDatabase, UserSubscriber {
         }
 
         return user;
+    }
+
+    @Override
+    public List<User> getUsers() {
+        List<User> result = new ArrayList<>();
+
+        try {
+            result = DatabaseManager.getSessionFactory().fromTransaction(session -> {
+                return session.createSelectionQuery("from User", User.class)
+                        .getResultList();
+            });
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    @Override
+    public void insertUser(String username, String password, boolean isAdmin) {
+        try {
+            DatabaseManager.getSessionFactory().inTransaction(session -> {
+                var user = new User(username, password, isAdmin);
+                session.persist(user);
+            });
+
+            notifyDataChanged();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void editUser(int userId, String username, String password, boolean isAdmin) {
+        try {
+            DatabaseManager.getSessionFactory().fromTransaction(session -> {
+                var user = session.get(User.class, userId);
+                user.setUsername(username);
+                user.setPassword(password);
+                user.setIsAdmin(isAdmin);
+                session.persist(user);
+
+                notifyDataChanged();
+                return null;
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void deleteUser(int userId) {
+        try {
+            DatabaseManager.getSessionFactory().fromTransaction(session -> {
+                User userToDelete = session.find(User.class, userId);
+
+                session.remove(userToDelete);
+
+                notifyDataChanged();
+
+                return null;
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

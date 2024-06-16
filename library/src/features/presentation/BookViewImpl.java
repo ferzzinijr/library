@@ -106,7 +106,7 @@ public class BookViewImpl extends JFrame implements BookView, BookListener {
 
     private void addBook() {
         String author = JOptionPane.showInputDialog(this, "Autor: ");
-        String name = JOptionPane.showInputDialog(this, "Nome: : ");
+        String name = JOptionPane.showInputDialog(this, "Nome: ");
         String[] options = {"Sim", "Não"};
         int selectedOption = JOptionPane.showOptionDialog(this, "Está disponível?", "Escolha uma opção",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, true);

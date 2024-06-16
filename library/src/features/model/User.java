@@ -1,24 +1,27 @@
 package features.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String username;
 
     private String password;
 
-    public int is_admin;
+    public boolean is_admin;
 
     public User() {}
+
+    public User(String username, String password, boolean isAdmin) {
+        this.username = username;
+        this.password = password;
+        is_admin = isAdmin;
+    }
 
     public int GetId() { return this.id; }
 
@@ -26,5 +29,17 @@ public class User {
 
     public String GetPassword() { return this.password; }
 
-    public int GetIsAdmin() { return this.is_admin; }
+    public boolean GetIsAdmin() { return this.is_admin; }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setIsAdmin(boolean isAdmin) {
+        this.is_admin = isAdmin;
+    }
 }

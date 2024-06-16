@@ -17,22 +17,22 @@ public class UserControlControllerImpl implements UserControlController {
     }
 
     @Override
-    public void addUser(String username, String password) {
-
+    public void addUser(String username, String password, boolean isAdmin) {
+        userDatabase.insertUser(username, password, isAdmin);
     }
 
     @Override
-    public void updateUser(String username, String password) {
-
+    public void updateUser(int userId, String username, String password, boolean isAdmin) {
+        userDatabase.editUser(userId, username, password, isAdmin);
     }
 
     @Override
     public void deleteUser(int userId) {
-
+        userDatabase.deleteUser(userId);
     }
 
     @Override
     public List<User> getUsers() {
-        return null;
+        return userDatabase.getUsers();
     }
 }

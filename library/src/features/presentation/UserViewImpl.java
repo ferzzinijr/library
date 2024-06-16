@@ -62,14 +62,18 @@ public class UserViewImpl extends JFrame implements UserView, UserListener {
                 if (user == null)
                     showErrorMessage("Credenciais inválidas");
                 else {
-                    if (user.is_admin == 1) {
+                    if (user.is_admin) {
                         closeWindow();
                         SwingUtilities.invokeLater(() -> {
                             new AdminViewImpl().setVisible(true);
                         });
                     }
-                    else
-                        showErrorMessage("Usuário normal");
+                    else{
+                        closeWindow();
+                        SwingUtilities.invokeLater(() -> {
+                            new UserUserViewImpl().setVisible(true);
+                        });
+                    }
                 }
             }
         });

@@ -20,7 +20,7 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public void updateUser(String username, String password) {
+    public void updateUser(String username, String password, boolean isAdmin) {
 
     }
 
@@ -31,7 +31,7 @@ public class UserControllerImpl implements UserController {
 
     @Override
     public List<User> getUsers() {
-        return null;
+        return userDatabase.getUsers();
     }
 
 }
