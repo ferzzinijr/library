@@ -9,5 +9,7 @@ public interface BookController {
     void updateBook(int bookId, String author, String name, boolean isAvailable, int daysToReserve);
     void deleteBook(int bookId);
     void setAvailable(int bookId);
+    void reserveBook(int bookId);
+    void returnBook(int bookId);
     List<Book> getBooks();
 }

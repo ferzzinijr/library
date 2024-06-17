@@ -10,4 +10,6 @@ public interface BookDatabase {
     void deleteBook(int bookId);
     List<Book> getBooks();
     void markBookAvailable(int bookId);
+    void reserveBook(int bookId);
+    void returnBook(int bookId);
 }

@@ -17,6 +17,10 @@ public class User {
 
     public User() {}
 
+    public User(boolean isAdmin) {
+        this.is_admin = true;
+    }
+
     public User(String username, String password, boolean isAdmin) {
         this.username = username;
         this.password = password;

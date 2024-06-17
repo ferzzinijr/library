@@ -3,6 +3,7 @@ package features.presentation;
 import features.datasource.BookListener;
 import features.datasource.BookSubscriber;
 import features.model.Book;
+import features.model.User;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -16,7 +17,7 @@ public class BookViewImpl extends JFrame implements BookView, BookListener {
     private DefaultTableModel table;
     private final BookController bookController;
 
-    public BookViewImpl(BookSubscriber bookSubscriber, BookController bookController) {
+    public BookViewImpl(BookSubscriber bookSubscriber, BookController bookController, User user) {
         setTitle("Book List");
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -26,12 +27,12 @@ public class BookViewImpl extends JFrame implements BookView, BookListener {
         this.bookController = bookController;
         bookController.setView(this);
 
-        InitializeUI();
+        InitializeUI(user);
 
         loadBooks();
     }
 
-    private void InitializeUI() {
+    private void InitializeUI(User user) {
         setLayout(new BorderLayout());
 
         table = new DefaultTableModel(new Object[]{"ID", "AUTHOR", "NAME", "IS_AVAILABLE", "DAYS_TO_RESERVE"}, 0);
@@ -39,37 +40,63 @@ public class BookViewImpl extends JFrame implements BookView, BookListener {
         JScrollPane scrollPane = new JScrollPane(bookTable);
         add(scrollPane, BorderLayout.CENTER);
 
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JButton addButton = new JButton("Adicionar");
-        JButton editButton = new JButton("Editar");
-        JButton deleteButton = new JButton("Delete");
+        if (user.is_admin) {
+            JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+            JButton addButton = new JButton("Adicionar");
+            JButton editButton = new JButton("Editar");
+            JButton deleteButton = new JButton("Delete");
 
-        buttonPanel.add(addButton);
-        buttonPanel.add(editButton);
-        buttonPanel.add(deleteButton);
+            buttonPanel.add(addButton);
+            buttonPanel.add(editButton);
+            buttonPanel.add(deleteButton);
 
-        addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                addBook();
-            }
-        });
+            addButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    addBook();
+                }
+            });
 
-        editButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                editBook(bookTable.getSelectedRow());
-            }
-        });
+            editButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    editBook(bookTable.getSelectedRow());
+                }
+            });
 
-        deleteButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                deleteBook(bookTable.getSelectedRow());
-            }
-        });
+            deleteButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    deleteBook(bookTable.getSelectedRow());
+                }
+            });
 
-        add(buttonPanel, BorderLayout.SOUTH);
+            add(buttonPanel, BorderLayout.SOUTH);
+        }
+        else {
+            JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+            JButton reverseButton = new JButton("Reservar");
+            JButton returnBook = new JButton("Devolver");
+
+            buttonPanel.add(reverseButton);
+            buttonPanel.add(returnBook);
+
+            reverseButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    reserveBook(bookTable.getSelectedRow());
+                }
+            });
+
+            returnBook.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    returnBook(bookTable.getSelectedRow());
+                }
+            });
+
+            add(buttonPanel, BorderLayout.SOUTH);
+        }
     }
 
     private void loadBooks() {
@@ -101,7 +128,10 @@ public class BookViewImpl extends JFrame implements BookView, BookListener {
 
     @Override
     public void showErrorMessage(String msg) {
-
+        JOptionPane.showMessageDialog(this,
+                msg,
+                "Erro",
+                JOptionPane.ERROR_MESSAGE);
     }
 
     private void addBook() {
@@ -143,5 +173,22 @@ public class BookViewImpl extends JFrame implements BookView, BookListener {
         int bookId = (int) table.getValueAt(row, 0);
 
         bookController.deleteBook(bookId);
+    }
+
+    private void reserveBook(int row) {
+        int bookId = (int) table.getValueAt(row, 0);
+        boolean isAvailable = (Boolean) table.getValueAt(row, 3);
+
+        if (!isAvailable) {
+            showErrorMessage("O livro não está disponível");
+        }
+
+        bookController.reserveBook(bookId);
+    }
+
+    private void returnBook(int row) {
+        int bookId = (int) table.getValueAt(row, 0);
+
+        bookController.returnBook(bookId);
     }
 }

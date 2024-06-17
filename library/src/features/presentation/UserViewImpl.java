@@ -70,8 +70,10 @@ public class UserViewImpl extends JFrame implements UserView, UserListener {
                     }
                     else{
                         closeWindow();
-                        SwingUtilities.invokeLater(() -> {
-                            new UserUserViewImpl().setVisible(true);
+                        SwingUtilities.invokeLater(new Runnable() {
+                            public void run() {
+                                ServiceLocator.getInstance().getBookView(user).open();
+                            }
                         });
                     }
                 }

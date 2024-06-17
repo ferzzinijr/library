@@ -1,6 +1,7 @@
 package features.presentation;
 
 import di.ServiceLocator;
+import features.model.User;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,7 +42,7 @@ public class AdminViewImpl extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
-                        ServiceLocator.getInstance().getBookView().open();
+                        ServiceLocator.getInstance().getBookView(new User(true)).open();
                     }
                 });
             }

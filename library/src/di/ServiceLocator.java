@@ -1,6 +1,7 @@
 package di;
 
 import features.datasource.*;
+import features.model.User;
 import features.presentation.*;
 
 public class ServiceLocator {
@@ -39,7 +40,7 @@ public class ServiceLocator {
     public BookDatabase getBookDatabase() {return getBookDao();}
     public BookSubscriber getBookSubscriber() {return getBookDao();}
     public BookController getBookController() {return new BookControllerImpl(getBookDatabase());}
-    public BookView getBookView() {return new BookViewImpl(getBookSubscriber(), getBookController());}
+    public BookView getBookView(User user) {return new BookViewImpl(getBookSubscriber(), getBookController(), user);}
 
     public UserControlController getUserControlController() {return new UserControlControllerImpl(getUserDatabase());}
     public UserControlView getUserControlView() {return new UserControlViewImpl(getUserSubscriber(), getUserControlController());}

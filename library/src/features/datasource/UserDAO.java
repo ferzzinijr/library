@@ -1,6 +1,5 @@
 package features.datasource;
 
-import features.model.Book;
 import features.model.User;
 import infrastructure.DatabaseManager;
 import org.hibernate.Session;

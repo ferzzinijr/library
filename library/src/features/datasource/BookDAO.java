@@ -90,4 +90,40 @@ public class BookDAO implements BookDatabase, BookSubscriber {
     public void markBookAvailable(int bookId) {
 
     }
+
+    @Override
+    public void reserveBook(int bookId) {
+        try {
+            DatabaseManager.getSessionFactory().fromTransaction(session -> {
+                Book book = session.find(Book.class, bookId);
+                book.setAvailable(false);
+
+                session.persist(book);
+
+                notifyDataChanged();
+
+                return null;
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void returnBook(int bookId) {
+        try {
+            DatabaseManager.getSessionFactory().fromTransaction(session -> {
+                Book book = session.find(Book.class, bookId);
+                book.setAvailable(true);
+
+                session.persist(book);
+
+                notifyDataChanged();
+
+                return null;
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

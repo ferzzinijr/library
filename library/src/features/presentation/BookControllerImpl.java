@@ -36,6 +36,16 @@ public class BookControllerImpl implements BookController {
     }
 
     @Override
+    public void reserveBook(int bookId) {
+        bookDatabase.reserveBook(bookId);
+    }
+
+    @Override
+    public void returnBook(int bookId) {
+        bookDatabase.returnBook(bookId);
+    }
+
+    @Override
     public List<Book> getBooks() {
         return bookDatabase.getBooks();
     }
